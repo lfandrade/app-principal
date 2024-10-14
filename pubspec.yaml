@@ -1,0 +1,31 @@
+name: app_principal
+description: Aplicativo principal que integra microapps.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Microapps referenciados por Git
+  microapp_pix:
+    git:
+      url: https://github.com/lfandrade/microapp_pix
+      ref: main # ou tag/branch específico
+  microapp_home:
+    git:
+      url: https://github.com/lfandrade/microapp_home
+      ref: main
+  microapp_cartoes:
+    git:
+      url: https://github.com/lfandrade/microapp_cartoes
+      ref: main
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
