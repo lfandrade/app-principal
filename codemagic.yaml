@@ -1,0 +1,29 @@
+workflows:
+  flutter-workflow:
+    name: Flutter Workflow with SCA
+    environment:
+      flutter: stable
+      xcode: latest # se for necessário para builds iOS, ajuste conforme sua necessidade
+    scripts:
+      # Passo 1: Configurar ambiente e instalar o osv-scanner
+      - name: Install osv-scanner
+        script: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+          wget https://github.com/google/osv-scanner/releases/download/v1.0.0/osv-scanner_1.0.0_linux_amd64.deb
+          sudo dpkg -i osv-scanner_1.0.0_linux_amd64.deb
+
+      # Passo 2: Executar o osv-scanner no pubspec.yaml
+      - name: Run SCA with osv-scanner
+        script: |
+          osv-scanner --lockfile=pubspec.lock
+
+      # Passo 3: Continuar com o build apenas se o scanner passar sem vulnerabilidades
+      - name: Flutter build
+        script: |
+          if [ $? -eq 0 ]; then
+            flutter build apk --release # ou `flutter build ios` para builds iOS
+          else
+            echo "Vulnerabilities found in pubspec.lock. Aborting build."
+            exit 1
+          fi
