@@ -4,10 +4,6 @@ workflows:
     environment:
       flutter: 3.22.0
       xcode: latest
-      cocoapods: default
-      node: latest
-      os: macos_monterey
-      working_directory: "."
     scripts:
       - name: Checkout do repositório
         script: git clone https://github.com/lfandrade/app_principal && cd projeto_flutter
