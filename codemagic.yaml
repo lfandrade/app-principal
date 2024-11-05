@@ -8,7 +8,7 @@ workflows:
       - name: Checkout do repositório
         script: git clone https://github.com/lfandrade/app_principal && cd app_principal
 
-        - name: Baixar e iniciar MinIO
+      - name: Baixar e iniciar MinIO
         script: |
           curl -O https://dl.min.io/server/minio/release/darwin-amd64/minio
           chmod +x minio
