@@ -1,8 +1,8 @@
 workflows:
   flutter-workflow:
-    name: Flutter Workflow with SCA
+    name: Flutter Workflow no ambiente ${ambiente} - GMUD ${gmud}
     environment:
-      flutter: stable
+      flutter: ${flutterversion}
       xcode: latest # se for necessário para builds iOS, ajuste conforme sua necessidade
     scripts:
       # Passo 1: Instalar o osv-scanner usando Homebrew
