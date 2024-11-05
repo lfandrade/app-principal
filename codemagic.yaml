@@ -6,7 +6,7 @@ workflows:
       xcode: latest
     scripts:
       - name: Checkout do repositório
-        script: git clone https://github.com/lfandrade/app_principal && cd projeto_flutter
+        script: git clone https://github.com/lfandrade/app_principal && cd app_principal
 
       - name: Instalar Docker (se não estiver disponível)
         script: |
