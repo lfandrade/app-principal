@@ -1,0 +1,21 @@
+workflows:
+  flutter-release:
+    name: Flutter Release Pipeline - Teste Docker MINIO
+    environment:
+      flutter: 3.22.0
+      xcode: latest
+    scripts:
+      - name: Checkout do repositório
+        script: git clone https://github.com/lfandrade/app_principal && cd app_principal
+
+      - name: Baixar e iniciar MinIO
+        script: |
+          curl -O https://dl.min.io/server/minio/release/darwin-amd64/minio
+          chmod +x minio
+          ./minio server /tmp/minio --console-address ":9001" &
+          sleep 5 # Aguarde o MinIO iniciar
+
+      - name: Verificar serviço do MinIO
+        script: |
+          curl http://localhost:9000/minio/health/live
+

@@ -1,21 +1,32 @@
 workflows:
-  flutter-release:
-    name: Flutter Release Pipeline - Teste Docker MINIO
+  flutter-workflow:
+    name: Flutter Workflow no ambiente ${ambiente} - GMUD ${gmud}
     environment:
-      flutter: 3.22.0
-      xcode: latest
+      flutter: ${flutterversion}
+      xcode: latest # se for necessário para builds iOS, ajuste conforme sua necessidade
     scripts:
-      - name: Checkout do repositório
-        script: git clone https://github.com/lfandrade/app_principal && cd app_principal
-
-      - name: Baixar e iniciar MinIO
+      # Passo 1: Instalar o osv-scanner usando Homebrew
+      - name: Install Homebrew
         script: |
-          curl -O https://dl.min.io/server/minio/release/darwin-amd64/minio
-          chmod +x minio
-          ./minio server /tmp/minio --console-address ":9001" &
-          sleep 5 # Aguarde o MinIO iniciar
+          if ! command -v brew &> /dev/null; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          fi
 
-      - name: Verificar serviço do MinIO
+      - name: Install osv-scanner
         script: |
-          curl http://localhost:9000/minio/health/live
+          brew install osv-scanner
 
+      # Passo 2: Executar o osv-scanner no pubspec.yaml
+      - name: Run SCA with osv-scanner
+        script: |
+          osv-scanner --lockfile=pubspec.lock
+
+      # Passo 3: Continuar com o build apenas se o scanner passar sem vulnerabilidades
+      - name: Flutter build
+        script: |
+          if [ $? -eq 0 ]; then
+            flutter build apk --release # ou `flutter build ios` para builds iOS
+          else
+            echo "Vulnerabilities found in pubspec.lock. Aborting build."
+            exit 1
+          fi
